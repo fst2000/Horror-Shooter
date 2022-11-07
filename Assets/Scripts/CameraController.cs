@@ -4,16 +4,23 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] float cameraRotationSpeed = 1f;
+    [SerializeField] float rotationInterpolationSpeed;
+    [SerializeField] float positionInterpolationSpeed;
     [SerializeField] Transform origin;
-    [SerializeField] Vector3 cameraPosition;
-    Vector3 cameraAngles = new Vector3();
-    void Update()
+    [SerializeField] Vector3 cameraOffset;
+    Vector3 originLerpPosition;
+    private void Start()
     {
-        Vector3 mouseInput = new Vector3(-Input.GetAxis("Mouse Y"), Input.GetAxis("Mouse X"), 0);
-        cameraAngles += mouseInput * cameraRotationSpeed;
-        cameraAngles.x = Mathf.Clamp(cameraAngles.x, -45f,45f);
-        transform.rotation =  Quaternion.Euler(cameraAngles);
-        transform.position = origin.position + transform.rotation * cameraPosition;
+
+    }
+    private void OnPreRender()
+    {
+        Quaternion cameraRotation = Quaternion.Lerp(transform.rotation, origin.rotation, rotationInterpolationSpeed * Time.deltaTime);
+        transform.rotation = cameraRotation;
+        transform.position = originLerpPosition + cameraRotation * cameraOffset;
+    }
+    private void FixedUpdate()
+    {
+        originLerpPosition = Vector3.Lerp(originLerpPosition, origin.position, positionInterpolationSpeed * Time.fixedDeltaTime);
     }
 }
