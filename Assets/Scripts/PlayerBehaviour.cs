@@ -23,7 +23,7 @@ public class PlayerBehaviour : MonoBehaviour
     }
     void Update()
     {
-        characterRotateInput += new Vector3(0,playerInput.MouseX * rotationSpeed, 0);
+        characterRotateInput += new Vector3(0,playerInput.MouseX * rotationSpeed * Time.deltaTime, 0);
         characrerMoveInput = playerInput.WalkInput * moveSpeed;
         transform.rotation = Quaternion.Euler(characterRotateInput);
         Vector3 velocity = rigidbody.velocity;
@@ -35,6 +35,6 @@ public class PlayerBehaviour : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.red;
-        Gizmos.DrawLine(gunTransform.position, gunTransform.position + gunTransform.rotation * Vector3.forward * 1000f);
+        Gizmos.DrawLine(gunTransform.position, gunTransform.position + gunTransform.rotation * Vector3.down * 1000f);
     }
 }
