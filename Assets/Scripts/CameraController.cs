@@ -8,6 +8,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] float positionInterpolationSpeed;
     [SerializeField] Transform origin;
     [SerializeField] Vector3 cameraOffset;
+    [SerializeField] Vector3 cameraTilt;
     Vector3 originLerpPosition;
     private void Start()
     {
@@ -15,7 +16,7 @@ public class CameraController : MonoBehaviour
     }
     private void OnPreRender()
     {
-        Quaternion cameraRotation = Quaternion.Lerp(transform.rotation, origin.rotation, rotationInterpolationSpeed * Time.deltaTime);
+        Quaternion cameraRotation = Quaternion.Lerp(transform.rotation, origin.rotation * Quaternion.Euler(cameraTilt), rotationInterpolationSpeed * Time.deltaTime);
         transform.rotation = cameraRotation;
         transform.position = originLerpPosition + cameraRotation * cameraOffset;
     }

@@ -44,7 +44,8 @@ public class PlayerInput
     {
         get
         {
-            Vector3 walkInput = new Vector3(MoveHorizontal, 0, MoveVertical);
+            Vector3 walkInput = Camera.main.transform.rotation * new Vector3(MoveHorizontal, 0, MoveVertical);
+            walkInput.y = 0f;
             return walkInput.normalized;
         }
     }
