@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PlayerBehaviour : MonoBehaviour
 {
@@ -9,25 +9,25 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] Transform gunTransform;
     [SerializeField] float rotationSpeed = 1f;
     PlayerInput playerInput;
-    new Rigidbody rigidbody;
+    CapsuleCollider capsuleCollider;
+    NavMeshAgent navMeshAgent;
     Animator animator;
-    Vector3 characterRotateInput;
-    Vector3 characrerMoveInput;
+    float playerRotation;
     void Start()
     {
-        rigidbody = gameObject.AddComponent<Rigidbody>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
+        capsuleCollider = GetComponent<CapsuleCollider>();
+        navMeshAgent.radius = capsuleCollider.radius;
+        navMeshAgent.height = capsuleCollider.height;
         animator = gameObject.GetComponent<Animator>();
         playerInput = new PlayerInput();
-        rigidbody.freezeRotation = true;
-        rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
     }
     void Update()
     {
-        characterRotateInput += new Vector3(0,playerInput.MouseX * rotationSpeed * Time.deltaTime, 0);
-        characrerMoveInput = playerInput.WalkInput * moveSpeed;
-        transform.rotation = Quaternion.Euler(characterRotateInput);
-        Vector3 velocity = rigidbody.velocity;
-        rigidbody.velocity = new Vector3(playerInput.WalkInput.x * moveSpeed, velocity.y,playerInput.WalkInput.z * moveSpeed);
+        playerRotation += playerInput.MouseX * rotationSpeed * Time.deltaTime;
+        transform.rotation = Quaternion.AngleAxis(playerRotation, Vector3.up);
+        Vector3 velocity = navMeshAgent.velocity;
+        navMeshAgent.velocity = playerInput.WalkInput * moveSpeed;
         animator.SetFloat("BlendMoveX", playerInput.MoveHorizontal);
         animator.SetFloat("BlendMoveY", playerInput.MoveVertical);
 
