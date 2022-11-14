@@ -11,16 +11,16 @@ public class Player : ICreature
     float playerRotation;
     float rotationSpeed;
     float moveSpeed;
-    public Player(GameObject gameObject, PlayerInput playerInput)
+    public Player(GameObject gameObject)
     {
         this.animator = gameObject.GetComponent<Animator>();
         this.navMeshAgent = gameObject.GetComponent<NavMeshAgent>();
         this.transform = gameObject.transform;
-        this.playerInput = playerInput;
+        this.playerInput = new PlayerInput();
     }
     public void Attack()
     {
-        throw new System.NotImplementedException();
+        animator.SetBool("isAttacking", true);
     }
 
     public void Die()

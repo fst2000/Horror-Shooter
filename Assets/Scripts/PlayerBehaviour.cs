@@ -10,30 +10,15 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] float rotationSpeed = 1f;
     [SerializeField] float radius;
     [SerializeField] float height;
-    PlayerInput playerInput;
-    CapsuleCollider capsuleCollider;
-    NavMeshAgent navMeshAgent;
-    Animator animator;
+    Player player;
     float playerRotation;
     void Start()
     {
-        navMeshAgent = GetComponent<NavMeshAgent>();
-        capsuleCollider = GetComponent<CapsuleCollider>();
-        navMeshAgent.radius = radius;
-        capsuleCollider.radius = radius;
-        navMeshAgent.height = height;
-        capsuleCollider.height = height;
-        animator = gameObject.GetComponent<Animator>();
-        playerInput = new PlayerInput();
+        player = new Player(gameObject);
     }
     void Update()
     {
-        playerRotation += playerInput.MouseX * rotationSpeed * Time.deltaTime;
-        transform.rotation = Quaternion.AngleAxis(playerRotation, Vector3.up);
-        Vector3 velocity = navMeshAgent.velocity;
-        navMeshAgent.velocity = playerInput.WalkInput * moveSpeed;
-        animator.SetFloat("BlendMoveX", playerInput.MoveHorizontal);
-        animator.SetFloat("BlendMoveY", playerInput.MoveVertical);
+        player.Move();
 
     }
     private void OnDrawGizmos()
