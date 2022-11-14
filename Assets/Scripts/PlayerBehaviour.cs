@@ -5,13 +5,8 @@ using UnityEngine.AI;
 
 public class PlayerBehaviour : MonoBehaviour
 {
-    [SerializeField] float moveSpeed = 4f;
     [SerializeField] Transform gunTransform;
-    [SerializeField] float rotationSpeed = 1f;
-    [SerializeField] float radius;
-    [SerializeField] float height;
-    Player player;
-    float playerRotation;
+    [SerializeField] Player player;
     void Start()
     {
         player = new Player(gameObject);
@@ -19,7 +14,7 @@ public class PlayerBehaviour : MonoBehaviour
     void Update()
     {
         player.Move();
-
+        player.Attack();
     }
     private void OnDrawGizmos()
     {

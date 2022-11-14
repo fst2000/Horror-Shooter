@@ -1,16 +1,20 @@
-﻿using Unity.VisualScripting;
+﻿using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Player : ICreature
+[System.Serializable] public class Player : ICreature
 {
     Animator animator;
     NavMeshAgent navMeshAgent;
     Transform transform;
     PlayerInput playerInput;
     float playerRotation;
-    float rotationSpeed;
-    float moveSpeed;
+    [SerializeField] float rotationSpeed = 200f;
+    [SerializeField] float moveSpeed = 2f;
+    int health = 100;
+    enum stateEnum {Moving, Attacking, Wounded, Dead};
+    stateEnum playerState;
     public Player(GameObject gameObject)
     {
         this.animator = gameObject.GetComponent<Animator>();
@@ -20,12 +24,28 @@ public class Player : ICreature
     }
     public void Attack()
     {
-        animator.SetBool("isAttacking", true);
+        if (playerInput.IsAim)
+        {
+            animator.SetBool("IsAttacking", true);
+            playerState = stateEnum.Attacking;
+        }
+        else
+        {
+            animator.SetBool("IsAttacking", false);
+            playerState = stateEnum.Moving;
+        }
     }
-
+    public void Wound(float damage)
+    {
+        health -= (int)damage;
+        playerState = stateEnum.Wounded;
+    }
     public void Die()
     {
-        throw new System.NotImplementedException();
+        if (health <= 0)
+        {
+            playerState = stateEnum.Dead;
+        }
     }
 
     public void Idle()
@@ -37,9 +57,13 @@ public class Player : ICreature
     {
         playerRotation += playerInput.MouseX * rotationSpeed * Time.deltaTime;
         transform.rotation = Quaternion.AngleAxis(playerRotation, Vector3.up);
-        Vector3 velocity = navMeshAgent.velocity;
-        navMeshAgent.velocity = playerInput.WalkInput * moveSpeed;
-        animator.SetFloat("BlendMoveX", playerInput.MoveHorizontal);
-        animator.SetFloat("BlendMoveY", playerInput.MoveVertical);
+
+        if (playerState == stateEnum.Moving)
+        {
+            Vector3 velocity = navMeshAgent.velocity;
+            navMeshAgent.velocity = playerInput.WalkInput * moveSpeed;
+            animator.SetFloat("BlendMoveX", playerInput.MoveHorizontal);
+            animator.SetFloat("BlendMoveY", playerInput.MoveVertical);
+        }
     }
 }

@@ -230,11 +230,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d665c9378f7add40b36617fb5d1a6e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 2
   gunTransform: {fileID: 247634739}
-  rotationSpeed: 200
-  radius: 0.4
-  height: 1.8
+  player:
+    rotationSpeed: 200
+    moveSpeed: 2
 --- !u!195 &442242113
 NavMeshAgent:
   m_ObjectHideFlags: 0

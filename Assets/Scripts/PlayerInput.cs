@@ -49,4 +49,11 @@ public class PlayerInput
             return walkInput.normalized;
         }
     }
+    public bool IsAim
+    {
+        get
+        {
+            return Input.GetMouseButton(1);
+        }
+    }
 }
