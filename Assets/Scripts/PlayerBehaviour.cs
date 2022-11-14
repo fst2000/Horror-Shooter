@@ -8,6 +8,8 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] float moveSpeed = 4f;
     [SerializeField] Transform gunTransform;
     [SerializeField] float rotationSpeed = 1f;
+    [SerializeField] float radius;
+    [SerializeField] float height;
     PlayerInput playerInput;
     CapsuleCollider capsuleCollider;
     NavMeshAgent navMeshAgent;
@@ -17,8 +19,10 @@ public class PlayerBehaviour : MonoBehaviour
     {
         navMeshAgent = GetComponent<NavMeshAgent>();
         capsuleCollider = GetComponent<CapsuleCollider>();
-        navMeshAgent.radius = capsuleCollider.radius;
-        navMeshAgent.height = capsuleCollider.height;
+        navMeshAgent.radius = radius;
+        capsuleCollider.radius = radius;
+        navMeshAgent.height = height;
+        capsuleCollider.height = height;
         animator = gameObject.GetComponent<Animator>();
         playerInput = new PlayerInput();
     }

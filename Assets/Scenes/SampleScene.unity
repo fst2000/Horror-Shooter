@@ -233,6 +233,8 @@ MonoBehaviour:
   moveSpeed: 2
   gunTransform: {fileID: 247634739}
   rotationSpeed: 200
+  radius: 0.4
+  height: 1.8
 --- !u!195 &442242113
 NavMeshAgent:
   m_ObjectHideFlags: 0
