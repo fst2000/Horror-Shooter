@@ -1,24 +1,34 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
 public class PlayerBehaviour : MonoBehaviour
 {
-    [SerializeField] Transform gunTransform;
-    [SerializeField] Player player;
+    [SerializeField] Transform cameraTransform;
+    [SerializeField] Joystick joystick;
+    new Rigidbody rigidbody;
+    CapsuleCollider capsuleCollider;
+    RigidBodyMoveSystem moveSystem;
+    IInputConsumer inputConsumer;
     void Start()
     {
-        player = new Player(gameObject);
+        capsuleCollider = gameObject.AddComponent<CapsuleCollider>();
+        capsuleCollider.height = 1.8f;
+        capsuleCollider.radius = 0.2f;
+        capsuleCollider.center = new Vector3(0, 0.9f, 0);
+
+        rigidbody = gameObject.AddComponent<Rigidbody>();
+        rigidbody.mass = 80;
+        rigidbody.freezeRotation = true;
+        rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
+
+        moveSystem = new RigidBodyMoveSystem(rigidbody);
+        inputConsumer = new WalkConsumer(moveSystem, cameraTransform, 3f);
     }
+
+    // Update is called once per frame
     void Update()
     {
-        player.Move();
-        player.Attack();
-    }
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(gunTransform.position, gunTransform.position + gunTransform.rotation * Vector3.down * 1000f);
+        joystick.GiveInput(inputConsumer);
     }
 }
