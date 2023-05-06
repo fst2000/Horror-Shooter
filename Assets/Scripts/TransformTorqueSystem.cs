@@ -11,6 +11,6 @@ public class TransformTorqueSystem : ITorqueSystem
 
     public void Torque(Vector3 eulerAngles)
     {
-        transform.rotation = Quaternion.Euler(eulerAngles * Time.deltaTime) * transform.rotation;
+        transform.rotation *= Quaternion.Euler(eulerAngles * Time.deltaTime);
     }
 }

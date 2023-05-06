@@ -569,6 +569,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d665c9378f7add40b36617fb5d1a6e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spineBone: {fileID: 1506951913}
   cameraTransform: {fileID: 963194228}
   joystick: {fileID: 197432034}
   touchpad: {fileID: 1059566087}
@@ -871,6 +872,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7df7faf9d2cceb448ab3298af72acf77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &1506951913 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8956515485712765115, guid: c20b97c2150fa1c4086d8c80eb9cd516, type: 3}
+  m_PrefabInstance: {fileID: 1522610362}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1522610362
 PrefabInstance:
   m_ObjectHideFlags: 0

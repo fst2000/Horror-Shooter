@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerBehaviour : MonoBehaviour
 {
+    [SerializeField] Transform spineBone;
+
     [SerializeField] Transform cameraTransform;
     [SerializeField] Joystick joystick;
     [SerializeField] Touchpad touchpad;
@@ -13,8 +15,10 @@ public class PlayerBehaviour : MonoBehaviour
     CapsuleCollider capsuleCollider;
     RigidBodyMoveSystem moveSystem;
     TransformTorqueSystem torqueSystem;
+    TransformTorqueSystem spineTorqueSystem;
+    SpineTorqueConsumer spineTorqueConsumer;
     IInputConsumer inputConsumer;
-    TorqueConsumer torqueConsumer;
+    PlayerTorqueConsumer torqueConsumer;
     AnimatorInputConsumer animatorInputConsumer;
     void Start()
     {
@@ -30,8 +34,10 @@ public class PlayerBehaviour : MonoBehaviour
 
         moveSystem = new RigidBodyMoveSystem(rigidbody);
         torqueSystem = new TransformTorqueSystem(transform);
+        spineTorqueSystem = new TransformTorqueSystem(spineBone);
+        spineTorqueConsumer = new SpineTorqueConsumer(spineTorqueSystem,torqueSpeed);
         inputConsumer = new WalkConsumer(moveSystem,cameraTransform, moveSpeed);
-        torqueConsumer = new TorqueConsumer(torqueSystem,torqueSpeed);
+        torqueConsumer = new PlayerTorqueConsumer(torqueSystem,torqueSpeed);
         animatorInputConsumer = new AnimatorInputConsumer(gameObject.GetComponent<Animator>(), "BlendMoveX", "BlendMoveY");
     }
 
@@ -41,5 +47,9 @@ public class PlayerBehaviour : MonoBehaviour
         joystick.GiveInput(inputConsumer);
         touchpad.GiveInput(torqueConsumer);
         joystick.GiveInput(animatorInputConsumer);
+    }
+    void LateUpdate()
+    {
+        touchpad.GiveInput(spineTorqueConsumer);
     }
 }
