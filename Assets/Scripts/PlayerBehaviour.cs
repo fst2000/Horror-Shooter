@@ -5,21 +5,28 @@ using UnityEngine;
 public class PlayerBehaviour : MonoBehaviour
 {
     [SerializeField] Transform spineBone;
-
     [SerializeField] Transform cameraTransform;
+
     [SerializeField] Joystick joystick;
     [SerializeField] Touchpad touchpad;
+    [SerializeField] Button aimButton;
+
     [SerializeField] float moveSpeed;
     [SerializeField] float torqueSpeed;
+
     new Rigidbody rigidbody;
     CapsuleCollider capsuleCollider;
     RigidBodyMoveSystem moveSystem;
+
     TransformTorqueSystem torqueSystem;
     TransformTorqueSystem spineTorqueSystem;
-    SpineTorqueConsumer spineTorqueConsumer;
-    IInputConsumer inputConsumer;
-    PlayerTorqueConsumer torqueConsumer;
-    AnimatorInputConsumer animatorInputConsumer;
+    SpineTorqueInputConsumer spineTorqueConsumer;
+    IInput<Vector2> touchpadInput;
+
+    IInputConsumer<Vector2> walkVector2InputConsumer;
+    IInputConsumer<Vector2> playerTorqueConsumer;
+    IInputConsumer<Vector2> animatorInputConsumer;
+    IInputConsumer<bool> animatorAimBoolInputConsumer;
     void Start()
     {
         capsuleCollider = gameObject.AddComponent<CapsuleCollider>();
@@ -30,26 +37,29 @@ public class PlayerBehaviour : MonoBehaviour
         rigidbody = gameObject.AddComponent<Rigidbody>();
         rigidbody.mass = 80;
         rigidbody.freezeRotation = true;
+        rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
         rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
 
         moveSystem = new RigidBodyMoveSystem(rigidbody);
         torqueSystem = new TransformTorqueSystem(transform);
         spineTorqueSystem = new TransformTorqueSystem(spineBone);
-        spineTorqueConsumer = new SpineTorqueConsumer(spineTorqueSystem,torqueSpeed);
-        inputConsumer = new WalkConsumer(moveSystem,cameraTransform, moveSpeed);
-        torqueConsumer = new PlayerTorqueConsumer(torqueSystem,torqueSpeed);
-        animatorInputConsumer = new AnimatorInputConsumer(gameObject.GetComponent<Animator>(), "BlendMoveX", "BlendMoveY");
+        spineTorqueConsumer = new SpineTorqueInputConsumer(spineTorqueSystem,torqueSpeed);
+        walkVector2InputConsumer = new WalkConsumer(moveSystem,cameraTransform, moveSpeed);
+        playerTorqueConsumer = new PlayerTorqueVector2InputConsumer(torqueSystem,torqueSpeed);
+        Animator animator = gameObject.GetComponent<Animator>();
+        animatorInputConsumer = new AnimatorVector2InputConsumer(animator, "BlendMoveX", "BlendMoveY");
+        animatorAimBoolInputConsumer = new AnimatorBoolInputConsumer(animator, "GunAim", "WalkBlend");
     }
-
-    // Update is called once per frame
     void Update()
     {
-        joystick.GiveInput(inputConsumer);
-        touchpad.GiveInput(torqueConsumer);
+        touchpadInput = touchpad.Input();
+        joystick.GiveInput(walkVector2InputConsumer);
         joystick.GiveInput(animatorInputConsumer);
+        aimButton.GiveInput(animatorAimBoolInputConsumer);
+        touchpadInput.GiveInput(playerTorqueConsumer);
     }
     void LateUpdate()
     {
-        touchpad.GiveInput(spineTorqueConsumer);
+        touchpadInput.GiveInput(spineTorqueConsumer);
     }
 }

@@ -1,5 +1,5 @@
 using UnityEngine;
-public interface IInputConsumer
+public interface IInputConsumer<T>
 {
-    void Consume(Vector2 input);
+    void Consume(T input);
 }

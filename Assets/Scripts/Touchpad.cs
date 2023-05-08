@@ -3,20 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Touchpad : MonoBehaviour, IInput, IDragHandler
+public class Touchpad : MonoBehaviour, IDragHandler
 {
-    RectTransform touchpad;
     Vector2 input;
-    public void GiveInput(IInputConsumer consumer)
-    {
-        consumer.Consume(input);
-    }
     public void OnDrag(PointerEventData eventData)
     {
         input = eventData.delta;
     }
-    void Update()
+    public IInput<Vector2> Input()
     {
+        TouchpadInput touchpadInput = new TouchpadInput(input);
         input = Vector2.zero;
+        return touchpadInput;
     }
 }

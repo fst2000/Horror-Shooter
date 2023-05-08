@@ -1,4 +1,4 @@
-public interface IInput
+public interface IInput<T>
 {
-    void GiveInput(IInputConsumer consumer);
+    void GiveInput(IInputConsumer<T> consumer);
 }

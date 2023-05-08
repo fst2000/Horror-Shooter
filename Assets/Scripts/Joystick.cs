@@ -1,12 +1,12 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-public class Joystick : MonoBehaviour, IInput, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerUpHandler, IPointerDownHandler
+public class Joystick : MonoBehaviour, IInput<Vector2>, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerUpHandler, IPointerDownHandler
 {
     Vector2 input;
     [SerializeField] RectTransform joystick;
     [SerializeField] RectTransform stick;
     [SerializeField] float shift;
-    public void GiveInput(IInputConsumer consumer)
+    public void GiveInput(IInputConsumer<Vector2> consumer)
     {
         consumer.Consume(input);
     }
@@ -40,4 +40,5 @@ public class Joystick : MonoBehaviour, IInput, IBeginDragHandler, IDragHandler, 
         input = Vector2.zero;
         stick.anchoredPosition = Vector2.zero;
     }
+    
 }

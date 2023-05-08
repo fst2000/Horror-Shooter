@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class WalkConsumer : IInputConsumer
+public class WalkConsumer : IInputConsumer<Vector2>
 {
     IMoveSystem moveSystem;
     ITorqueSystem torqueSystem;
