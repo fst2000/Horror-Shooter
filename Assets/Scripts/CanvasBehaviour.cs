@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class CanvasBehaviour : MonoBehaviour
 {
-    // Start is called before the first frame update
+    [SerializeField] GameObject joystick;
+
+    [SerializeField] Button aimButton;
+
+    RenderBoolInputConsumer joystickRenderConsumer;
     void Start()
     {
-        
+        joystickRenderConsumer = new RenderBoolInputConsumer(joystick);
     }
-
-    // Update is called once per frame
     void Update()
     {
-        
+        aimButton.GiveInput(new DelegateInputConsumer<bool>(i => joystickRenderConsumer.Consume(!i)));
     }
 }
