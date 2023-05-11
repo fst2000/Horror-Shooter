@@ -20,6 +20,6 @@ public class CameraOffsetBoolInputConsumer : IInputConsumer<bool>
     {
         Vector3 offset = input? onTrue : onFalse;
         Vector3 position = origin.position + new Vector3(0,offset.y,0) + transform.rotation * new Vector3(offset.x,0,-offset.z);
-        transform.position = Vector3.Lerp(transform.position,position, cameraSmoothness * Time.deltaTime);
+        transform.position = position;
     }
 }

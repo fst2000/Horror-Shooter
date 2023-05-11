@@ -13,20 +13,20 @@ public class PlayerBehaviour : MonoBehaviour
 
     [SerializeField] float moveSpeed;
     [SerializeField] float torqueSpeed;
+    [SerializeField] float minTiltAngle;
+    [SerializeField] float maxTiltAngle;
+    float tiltAngle;
 
     new Rigidbody rigidbody;
     CapsuleCollider capsuleCollider;
-    RigidBodyMoveSystem moveSystem;
 
-    TransformTorqueSystem torqueSystem;
-    TransformTorqueSystem spineTorqueSystem;
-    SpineTorqueInputConsumer spineTorqueConsumer;
-    IInput<Vector2> touchpadInput;
+    IInputConsumer<Vector2> playerVector2JoystickConsumer;
+    IInputConsumer<Vector2> playerVector2TouchpadConsumer;
+    IMoveSystem moveSystem;
 
-    IInputConsumer<Vector2> walkVector2InputConsumer;
-    IInputConsumer<Vector2> playerTorqueConsumer;
-    IInputConsumer<Vector2> animatorInputConsumer;
-    IInputConsumer<bool> animatorAimBoolInputConsumer;
+    ITorqueSystem playerTorqueSystem;
+    ITorqueSystem spineTorqueSystem;
+    ITorqueSystem cameraTorqueSystem;
     void Start()
     {
         capsuleCollider = gameObject.AddComponent<CapsuleCollider>();
@@ -39,27 +39,37 @@ public class PlayerBehaviour : MonoBehaviour
         rigidbody.freezeRotation = true;
         rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
         rigidbody.collisionDetectionMode = CollisionDetectionMode.Continuous;
-
         moveSystem = new RigidBodyMoveSystem(rigidbody);
-        torqueSystem = new TransformTorqueSystem(transform);
+        playerTorqueSystem = new TransformTorqueSystem(transform);
         spineTorqueSystem = new TransformTorqueSystem(spineBone);
-        spineTorqueConsumer = new SpineTorqueInputConsumer(spineTorqueSystem,torqueSpeed);
-        walkVector2InputConsumer = new WalkConsumer(moveSystem,cameraTransform, moveSpeed);
-        playerTorqueConsumer = new PlayerTorqueVector2InputConsumer(torqueSystem,torqueSpeed);
+        cameraTorqueSystem = new DelegateTorqueSystem(eulerAngles =>
+        {
+            eulerAngles.x = Mathf.Clamp(eulerAngles.x, minTiltAngle, maxTiltAngle);
+            cameraTransform.rotation *= Quaternion.Euler(eulerAngles);
+        });
+
         Animator animator = gameObject.GetComponent<Animator>();
-        animatorInputConsumer = new AnimatorVector2InputConsumer(animator, "BlendMoveX", "BlendMoveY");
-        animatorAimBoolInputConsumer = new AnimatorBoolInputConsumer(animator, "GunAim", "WalkBlend");
+
+        playerVector2JoystickConsumer = new DelegateInputConsumer<Vector2>(input =>
+        {
+            moveSystem.Move(transform.TransformDirection(new Vector3(input.x , 0, input.y) * moveSpeed));
+        });
+        playerVector2TouchpadConsumer = new DelegateInputConsumer<Vector2>(input =>
+        {
+            playerTorqueSystem.Torque(new Vector3(0,input.x,0) * torqueSpeed);
+            tiltAngle += -input.y;
+            tiltAngle = Mathf.Clamp(tiltAngle, minTiltAngle, maxTiltAngle);
+            spineTorqueSystem.Torque(new Vector3(tiltAngle,0,0));
+            cameraTorqueSystem.Torque(new Vector3(-input.y,0,0));
+        });
     }
     void Update()
     {
-        touchpadInput = touchpad.Input();
-        joystick.GiveInput(walkVector2InputConsumer);
-        joystick.GiveInput(animatorInputConsumer);
-        aimButton.GiveInput(animatorAimBoolInputConsumer);
-        touchpadInput.GiveInput(playerTorqueConsumer);
+        joystick.GiveInput(playerVector2JoystickConsumer);
     }
     void LateUpdate()
     {
-        touchpadInput.GiveInput(spineTorqueConsumer);
+        IInput<Vector2> touchpadInput = touchpad.Input();
+        touchpadInput.GiveInput(playerVector2TouchpadConsumer);
     }
 }

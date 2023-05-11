@@ -2,7 +2,6 @@ using UnityEngine;
 public class RenderBoolInputConsumer : IInputConsumer<bool>
 {
     GameObject renderer;
-
     public RenderBoolInputConsumer(GameObject render)
     {
         this.renderer = render;
@@ -10,6 +9,6 @@ public class RenderBoolInputConsumer : IInputConsumer<bool>
 
     public void Consume(bool input)
     {
-        renderer.SetActive(input);
+        if(renderer.activeInHierarchy != input)renderer.SetActive(input);
     }
 }

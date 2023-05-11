@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.07733152, g: 0.07733152, b: 0.07733152, a: 1}
+  m_IndirectSpecularColor: {r: 0.2968749, g: 0.34301767, b: 0.37719753, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -213,7 +213,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 65821865}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -2.25, y: 2.62, z: 2.79}
+  m_LocalPosition: {x: -2.25, y: 3.18, z: 2.79}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -748,7 +748,7 @@ Light:
   m_Shape: 0
   m_Color: {r: 1, g: 0.66368926, b: 0.390566, a: 1}
   m_Intensity: 1
-  m_Range: 10
+  m_Range: 20
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -835,7 +835,9 @@ MonoBehaviour:
   touchpad: {fileID: 1059566087}
   aimButton: {fileID: 264385738}
   moveSpeed: 3
-  torqueSpeed: 0.2
+  torqueSpeed: 0.4
+  minTiltAngle: -30
+  maxTiltAngle: 30
 --- !u!4 &759711434 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: c20b97c2150fa1c4086d8c80eb9cd516, type: 3}
@@ -1010,7 +1012,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 1000
+  far clip plane: 30
   field of view: 60
   orthographic: 0
   orthographic size: 5
@@ -1056,7 +1058,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a07cea91bf7c9c742a8f506b0a9bb3b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spine: {fileID: 1896918155}
+  head: {fileID: 0}
   origin: {fileID: 759711434}
   walkOffset: {x: 0.5, y: 1.5, z: 2}
   aimOffset: {x: 0.8, y: 1.5, z: 1}
@@ -1229,8 +1231,3 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: 118324c3784d353449a2878bafc5922c, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c20b97c2150fa1c4086d8c80eb9cd516, type: 3}
---- !u!4 &1896918155 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 3663280332473152303, guid: c20b97c2150fa1c4086d8c80eb9cd516, type: 3}
-  m_PrefabInstance: {fileID: 1522610362}
-  m_PrefabAsset: {fileID: 0}
